@@ -1,0 +1,14 @@
+{
+    "name": "sakura/mypackage",
+    "description": "My firt Composer project",
+    "type": "shared",
+    "license": "0.1",
+    "authors": [
+        {
+            "name": "sakura",
+            "email": "eva.phuc@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
