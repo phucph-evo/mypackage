@@ -1,7 +1,7 @@
 {
     "name": "sakura/mypackage",
     "description": "My firt Composer project",
-    "type": "shared",
+    "type" : "shared-package",
     "license": "0.1",
     "authors": [
         {
