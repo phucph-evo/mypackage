@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+/**
+ * declare(ticks=N)が必要なコマンドを起動するためのconsoleスクリプトです.
+ */
+
+declare (ticks=1);
+
+// TODO:
+// 本来はbatch_requireを呼ぶべきではない & GlobalApplicationを使うべきではない
+// 正しくは ここでbootして返ってきたApplicationオブジェクトを使うべき
+require_once(dirname(__FILE__) . "/../data/batch_require.php");
+use Giftmall\Console\Helper\GiftmallApplicationHelper;
+
+$application = \Giftmall\GlobalApplication::get();
+
+$runner = new LhCommon\Console\ConsoleRunner(
+    "Giftmall Console with tick",
+    \Giftmall\Logger::forGiftmall()
+);
+
+$commands = [
+    new \Giftmall\Console\Command\JobQueue\StartWorker(),
+];
+
+$runner->run(
+    new \Symfony\Component\Console\Helper\HelperSet([
+        GiftmallApplicationHelper::NAME => new GiftmallApplicationHelper($application)
+    ]),
+    $commands
+);

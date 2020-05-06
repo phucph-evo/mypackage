@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+BIN_DIR=`cd $(dirname $0); pwd`
+DATA_DIR=${BIN_DIR}/../data
+HTML_DIR=${BIN_DIR}/../html
+
+if [ $# -ne 1 ]; then
+	echo 'Usage:  symlink <path/to/giftmall_shared>'
+	exit
+fi
+
+SHARED_DIR=`cd $(dirname $1);pwd`/$(basename $1)
+
+if [ -h ${DATA_DIR}/upload ]; then
+	# Once delete the links, iff exists
+	echo unlink ${DATA_DIR}/upload
+	rm -f ${DATA_DIR}/upload
+fi
+ln -s ${SHARED_DIR}/data/upload ${DATA_DIR}/upload
+echo "giftmall/data/upload is linked"
+
+
+if [ -h ${DATA_DIR}/downloads ]; then
+	# Once delete the links, iff exists
+	echo unlink ${DATA_DIR}/downloads
+	rm -f ${DATA_DIR}/downloads
+fi
+ln -s ${SHARED_DIR}/data/downloads ${DATA_DIR}/downloads
+echo "giftmall/data/upload is linked"
+
+
+if [ -h ${HTML_DIR}/upload ]; then
+	# Once delete the links, iff exists
+	echo "unlink ${HTML_DIR}/upload"
+	rm -f ${HTML_DIR}/upload
+fi
+ln -s ${SHARED_DIR}/html/upload ${HTML_DIR}/upload
+echo "giftmall/html/upload is linked"
+
+
+if [ -h ${HTML_DIR}/user_data ]; then
+	# Once delete the links, iff exists
+	echo "unlink ${HTML_DIR}/user_data"
+	rm -f ${HTML_DIR}/user_data
+fi
+ln -s ${SHARED_DIR}/html/user_data ${HTML_DIR}/user_data
+echo "giftmall/html/user_data is linked"
+
+

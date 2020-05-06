@@ -54,3 +54,35 @@ jobs:
       # run tests with phpunit or codecept
       #- run: ./vendor/bin/phpunit
       - run: ./vendor/bin/phpunit
+
+  test:
+    parameters:
+      executor:
+        type: executor
+      php-5:
+        type: boolean
+    executor: << parameters.executor >>
+    steps:
+        
+      - run: |
+            if [ ${CIRCLE_BRANCH} == "master" ]; then
+              make cs-full
+            else
+              make cs
+            fi
+
+      - run: make phpunit PHPUNIT_OPTIONS="-d memory_limit=1024M
+
+  front:
+    executor: node
+    steps:
+      - checkout
+      - npm:
+          cache-key: v5
+      # 本来はmasterではmake tslint-fullを流したいところだが、
+      # 現状は全くlintに対応できていないため差分実行のみに対応する
+      - run: |
+          if [ ${CIRCLE_BRANCH} != "master" ]; then
+            make tslint
+          fi
+      - run: make stylelint

@@ -1,0 +1,113 @@
+#!/usr/bin/env php
+<?php
+
+// TODO:
+// 本来はbatch_requireを呼ぶべきではない & GlobalApplicationを使うべきではない
+// 正しくは ここでbootして返ってきたApplicationオブジェクトを使うべき
+require_once(dirname(__FILE__) . "/../data/batch_require.php");
+
+use Symfony\Component\Console\Helper\HelperSet;
+use LhCommon\Console\ConsoleRunner;
+use Giftmall\Console\Helper\GiftmallApplicationHelper;
+
+$application = \Giftmall\GlobalApplication::get();
+
+$helperSet = new HelperSet([
+    GiftmallApplicationHelper::NAME => new GiftmallApplicationHelper($application),
+    'question' => new \Symfony\Component\Console\Helper\QuestionHelper(),
+]);
+$commands = [
+    new \Giftmall\Console\Command\Tester\EchoTester(),
+    new \Giftmall\Console\Command\TmpReSendEmail(),
+    new \Giftmall\Crm\Console\Command\ReportDailyMetricsCommand(),
+    new \Giftmall\Console\Command\ImageStorage\MasterImage\SynchronizerCommand(),
+    new \Giftmall\Console\Command\ImageStorage\SynchronizeImageInformation(),
+    new \Giftmall\Console\Command\ImageStorage\UploadCommand(),
+    new \Giftmall\Console\Command\SendOrderEmail\NotifyChangePaymentInformation(),
+    new \Giftmall\ProductFtpFederation\Console\Command\ImportFtpData(),
+    new \Giftmall\ProductFtpFederation\Console\Command\ImportLocalData(),
+    new \Giftmall\Console\Command\Tester\MailTester(),
+    new \Giftmall\Console\Command\Tester\MemcachedTester(),
+    new \Giftmall\Console\Command\ExportProduct\Aigent(),
+    new \Giftmall\Console\Command\ExportProduct\CriteoPerformanceProductFeed(),
+    new \Giftmall\Console\Command\Tag\UpdateImageCommand(),
+    new \Giftmall\Console\Command\TmpForceKickZendeskShipHandler(),
+    new \Giftmall\Console\Command\TmpForceKickZendeskDonePaymentHandler(),
+    new \Giftmall\Console\Command\JobQueue\StopWorker(),
+    new \Giftmall\Console\Command\JobQueue\DataDogIntegration(),
+    new \Giftmall\Console\Command\JobQueue\DataDogIntegration(),
+    new \Giftmall\Console\Command\AutoCancel\ShowTargetOrders(),
+    new \Giftmall\Console\Command\AutoCancel\ByOrderId(),
+    new \Giftmall\Console\Command\PaymentReminderTool\ShowTargetOrders(),
+    new \Giftmall\Console\Command\PaymentReminderTool\ForceRemind(),
+    new \Giftmall\Console\Command\ForceMakePayment(),
+    new \Giftmall\Console\Command\Order\RemindSocialGiftOrder(),
+    new \Giftmall\Console\Command\SocialGiftOrderReminderTool\ShowTargetOrders(),
+    new \Giftmall\Console\Command\SocialGiftOrderReminderTool\ForceRemind(),
+    new \Giftmall\Console\Command\InconsistentVeritransOrderChecker(),
+    new \Giftmall\ExternalService\WillMail\ConsoleCommand\RegisterComponent(),
+    new \Giftmall\ExternalService\WillMail\ConsoleCommand\UpdateWillMailMergedCartAbandonmentDb(),
+    new \Giftmall\ExternalService\WillMail\ConsoleCommand\UpdateWillMailFavoriteProductDb(),
+    new \Giftmall\ExternalService\WillMail\ConsoleCommand\UpdateWillMailViewedProductDb(),
+    new \Giftmall\ExternalService\WillMail\ConsoleCommand\UpdateWillMailSameMonthPurchaseDb(),
+    new \Giftmall\Console\Command\ReviewRewardTool\ShowTargetReviews(),
+    new \Giftmall\Console\Command\ReviewRewardTool\ForceReward(),
+    new \Giftmall\Console\Command\ReferralCouponRewardTool\ShowTargetRewards(),
+    new \Giftmall\Console\Command\ReferralCouponRewardTool\ForceReward(),
+    new \Giftmall\ExternalService\Bestpresent\Console\CalculateConversionInflow(),
+    new \Giftmall\ExternalService\AmazonPay\Console\MonitorOrphanOrderReferenceWithCapture(),
+    new \Giftmall\ExternalService\AmazonPay\Console\MonitorRefundRequest(),
+    new \Giftmall\ExternalService\Rakuten\ConsoleCommand\ExportItemCsvOfShop(),
+    new \Giftmall\ExternalService\Rakuten\ConsoleCommand\ExportSelectCsvOfShop(),
+    new \Giftmall\Console\Command\FeaturedPage\WarmCache(),
+    new \Giftmall\Analytics\ProductPerformance\Console\Command\UpdateProductPurchaseCountPerFeaturedPage(),
+    new \Giftmall\Console\Command\Product\UploadImages(),
+    new \Giftmall\ExternalService\Rakuten\ConsoleCommand\TmpAxesProductCodeImageSourceMappingImporter(),
+    new \Giftmall\ProductFtpFederation\Console\Command\TmpAddImageSrcImageIdMappingsOfAxesImages(),
+    new \Giftmall\Analytics\Console\Command\CalculateCustomerProfiles(),
+    new \Giftmall\Analytics\Console\Command\CalculateProfiles(),
+    new \Giftmall\Console\Command\Product\Option\RepairContentHash(),
+    new \Giftmall\Console\Command\Product\Option\SyncAnswer(),
+    new \Giftmall\Console\Command\Product\Option\CheckConsistency(),
+    new \Giftmall\ExternalService\TuhanSuruzou\ConsoleCommand\TestSendOrderPaymentDoneNotificationMail(),
+    new \Giftmall\ExternalService\TuhanSuruzou\ConsoleCommand\ForceSendOrderCreateNotification(),
+    new \Giftmall\ExternalService\AtobaraiComAPI\Console\ExecuteDelivListApi(),
+    new \Giftmall\ExternalService\AtobaraiComAPI\Console\ExecuteStatusApi(),
+    new \Giftmall\Console\Command\Tester\AdminAuthorityTester(),
+    new \Giftmall\Analytics\Console\Command\OrderProfileCalculateTester(),
+    new \Giftmall\Console\Command\Board\Api\GenerateAuthenticationToken(),
+    new \Giftmall\Console\Command\Board\Api\RevokeAuthenticationToken(),
+    new \Giftmall\Console\Command\Board\Api\ListAuthenticationToken(),
+    new \Giftmall\Console\Command\CampaignTracking\SalvageLandings(),
+    new \Giftmall\Console\Command\CampaignTracking\SalvageTfslTransactions(),
+    new \Giftmall\Console\Command\Product\UploadPlainImages(),
+    new \Giftmall\ExternalService\GoogleShopping\Console\ExportFeed(),
+    new \Giftmall\ExternalService\GoogleShopping\Console\UpdateAlcoholProduct(),
+    new \Giftmall\ExternalService\GoogleShopping\Console\GoogleTaxnomyTextToGoogleProductCategory(),
+    new \Giftmall\ExternalService\GoogleShopping\Console\DetectProductCategory(),
+    new \Giftmall\ExternalService\PegFactory\Console\GenerateSourceCsv(),
+    new \Giftmall\ExternalService\PegFactory\Console\TestGenerateSourceCsv(),
+    new \Giftmall\ExternalService\PegFactory\Console\AddProduct(),
+    new \Giftmall\ExternalService\DaigoSouko\Console\GenerateAndSendToDaigoSouko(),
+    new \Giftmall\ExternalService\CrossMall\Console\UpdateStock(),
+    new \Giftmall\Console\Command\Product\RegisterProductClassSlug(),
+    new \Giftmall\Console\Command\TmpUpdateTaxRate(),
+    new \Giftmall\Console\Command\TmpCreateCashOnDeliveryChangeSettingSnapshot(),
+    new \Giftmall\Console\Command\Tester\SystemChargeCalculationTester(),
+    new \Giftmall\Console\Command\NudgeNotification\UpdatePurchasedProductCount(),
+    new \Giftmall\Console\Command\NudgeNotification\UpdateProductViewCount(),
+    new \Giftmall\Console\Command\Resource\ValidateCommand(),
+    new \Giftmall\Console\Command\TmpDeleteDuplicateProductOptionRelations(),
+];
+
+$commands = array_merge(
+    $commands,
+    \Giftmall\ExternalService\Zendesk\ConsoleCommandFactory::getAllCommands()
+);
+
+$runner = new ConsoleRunner(
+    "Giftmall Console",
+    \Giftmall\Logger::forGiftmall()
+);
+
+$runner->run($helperSet, $commands);

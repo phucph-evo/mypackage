@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+#--------------------------------------------------------------------------------
+# Diff executor
+# apply given command to changed code between current code set and master branch
+#--------------------------------------------------------------------------------
+
+set -u -e
+
+#--- parse commandline arguments
+usage_exit() {
+    echo "Usage: $0 [-v] [-i expr] [-e expr] command ..." 1>&2
+    echo "-v verbose" 1>&2
+    echo "-i 'includes' expression" 1>&2
+    echo "-e 'excludes' expression" 1>&2
+    exit 1
+}
+
+# set default option values
+# expression that match to everything
+INCLUDE=""
+# expression that does not match to anything
+EXCLUDE="^$"
+
+# parse commandline arguments
+while getopts vi:e:h OPT
+do
+    case $OPT in
+        v)  set -x
+            ;;
+        i)  INCLUDE=$OPTARG
+            ;;
+        e)  EXCLUDE=$OPTARG
+            ;;
+        h)  usage_exit
+            ;;
+        \?) usage_exit
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# command to execute
+if [ $# -ne 1 ]; then
+      usage_exit
+  exit 1
+fi
+COMMAND_LINE=$1
+
+#--- normalize xargs options
+if [ "$(uname)" == "Darwin" ]; then
+    XARGS_OPTIONS=''
+else
+    XARGS_OPTIONS='--no-run-if-empty'
+fi
+
+#--- execution
+
+# git statuses
+# ' ' = unmodified
+# M   = modified
+# A   = added
+# D   = deleted
+# R   = renamed
+# C   = copied
+# U   = updated but unmerged
+# ?   = untracked
+# !   = ignored
+
+# to continue processing when failed a first command
+set +e
+
+# apply a command to untracked/staged/unstaged files
+git status --short \
+  | grep -v -E "^[D].+$" \
+  | grep -E "^ ?\?+?" \
+  | rev | cut -d " " -f 1 | rev \
+  | grep -E ${INCLUDE} \
+  | grep -v -E ${EXCLUDE} \
+  | xargs ${XARGS_OPTIONS} ${COMMAND_LINE}
+RESULT_UNTRACKED_CHECK=$?
+
+# apply a command to changed files from a master branch
+git diff --name-status origin/master \
+  | grep -v -E "^[D].+$" \
+  | rev | cut -f 1 | rev \
+  | grep -E ${INCLUDE} \
+  | grep -v -E ${EXCLUDE} \
+  | xargs ${XARGS_OPTIONS} ${COMMAND_LINE}
+RESULT_WORKING_COPY_CHECK=$?
+
+set -e
+
+if [ ${RESULT_UNTRACKED_CHECK} -ne 0 ]; then
+    exit ${RESULT_UNTRACKED_CHECK}
+fi
+if [ ${RESULT_WORKING_COPY_CHECK} -ne 0 ]; then
+    exit ${RESULT_WORKING_COPY_CHECK}
+fi
+
+exit 0
