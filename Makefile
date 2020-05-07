@@ -7,7 +7,7 @@ check: cs 7cc test
 MIGRATE_OPTION =
 CODECEPT_TARGET= tests/old_codecept_unit/
 CODECEPT_OPTIONS=
-PHPUNIT_TARGET = tests/phpunit/
+PHPUNIT_TARGET = tests/
 PHPUNIT_OPTIONS = -d memory_limit=1024M
 PHPCS_OPTIONS=-d memory_limit=512M
 cs-full:
@@ -34,7 +34,7 @@ test:
 codecept:
 	php vendor/bin/codecept run old_codecept_unit $(CODECEPT_OPTIONS) $(CODECEPT_TARGET)
 phpunit:
-	$(VENDOR_BIN)/phpunit $(PHPUNIT_OPTIONS) $(PHPUNIT_TARGET)
+	$(VENDOR_BIN)/phpunit $(PHPUNIT_OPTIONS) #$(PHPUNIT_TARGET)
 db-generate:
 	$(VENDOR_BIN)/doctrine migrations:generate
 db-migrate:
