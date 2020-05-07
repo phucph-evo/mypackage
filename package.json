@@ -1,0 +1,42 @@
+{
+  "name": "mypackage",
+  "version": "1.0.0",
+  "description": "Create Readme file",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp default",
+    "stylelint": "stylelint ./assets/css",
+    "watch": "gulp watch",
+    "tslint:full": "eslint ./assets/js/** --ext .js",
+    "tslint": "eslint --ext .js",
+    "tslint:fix": "eslint --fix --ext .js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phucph-evo/mypackage.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phucph-evo/mypackage/issues"
+  },
+  "homepage": "https://github.com/phucph-evo/mypackage#readme",
+  "devDependencies": {
+    "del": "^5.1.0",
+    "eslint": "^6.8.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssmin": "^0.2.0",
+    "gulp-jshint": "^2.1.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-uglify": "^3.0.2",
+    "jshint": "^2.11.0",
+    "stylelint": "^13.3.3",
+    "stylelint-config-standard": "^20.0.0"
+  }
+}

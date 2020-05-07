@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+BIN_DIR=`cd $(dirname $0); pwd`
+
+DATA_DIR=${BIN_DIR}/../data
+
+rm -rf ${DATA_DIR}/cache/*
+rm -rf ${DATA_DIR}/Smarty/templates_c/*

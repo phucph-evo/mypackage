@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+BIN_DIR=`cd $(dirname $0); pwd`
+
+DATA_DIR=${BIN_DIR}/../data
+HTML_DIR=${BIN_DIR}/../html
+
+chmod -R 777 ${DATA_DIR}/Smarty/templates_c
+chmod -R 777 ${DATA_DIR}/cache
+chmod -R 777 ${DATA_DIR}/logs
+
+chmod -R 777 ${HTML_DIR}/mgt/assets
