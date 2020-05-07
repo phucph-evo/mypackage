@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests;
+
+use Src\Email;
 use PHPUnit\Framework\TestCase;
 
 final class EmailTest extends TestCase
@@ -8,8 +11,8 @@ final class EmailTest extends TestCase
     public function testCanBeCreatedFromValidEmailAddress(): void
     {
         $this->assertInstanceOf(
-                Email::class,
-                Email::fromString('user@example.com')
+            Email::class,
+            Email::fromString('user@example.com')
         );
     }
 
@@ -23,9 +26,8 @@ final class EmailTest extends TestCase
     public function testCanBeUsedAsString(): void
     {
         $this->assertEquals(
-                'user@example.com',
-                Email::fromString('user@example.com')
+            'user@example.com',
+            Email::fromString('user@example.com')
         );
     }
-
 }
