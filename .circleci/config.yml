@@ -61,7 +61,7 @@ jobs:
               make cs
             fi
 
-      - run: make phpunit PHPUNIT_OPTIONS="-d memory_limit=1024M
+      - run: make phpunit PHPUNIT_OPTIONS="-d memory_limit=1024M"
 
       - run: |
           if [ ${CIRCLE_BRANCH} != "master" ]; then
