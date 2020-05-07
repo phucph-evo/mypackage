@@ -2,6 +2,8 @@
 
 namespace Src;
 
+use InvalidArgumentException;
+
 final class Email
 {
 

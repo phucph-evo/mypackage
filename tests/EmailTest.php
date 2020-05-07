@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Src\Email;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class EmailTest extends TestCase

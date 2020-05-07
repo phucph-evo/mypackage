@@ -34,7 +34,7 @@ test:
 codecept:
 	php vendor/bin/codecept run old_codecept_unit $(CODECEPT_OPTIONS) $(CODECEPT_TARGET)
 phpunit:
-	$(VENDOR_BIN)/phpunit $(PHPUNIT_OPTIONS) #$(PHPUNIT_TARGET)
+	$(VENDOR_BIN)/phpunit $(PHPUNIT_OPTIONS) $(PHPUNIT_TARGET)
 db-generate:
 	$(VENDOR_BIN)/doctrine migrations:generate
 db-migrate:
